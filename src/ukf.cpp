@@ -28,7 +28,7 @@ UKF::UKF() {
     // initial covariance matrix
     P_ = MatrixXd(n_x_, n_x_);
 
-    P_ << 1, 0, 0, 0, 0,
+    P_ <<   1, 0, 0, 0, 0,
             0, 1, 0, 0, 0,
             0, 0, 1, 0, 0,
             0, 0, 0, 1, 0,
@@ -39,7 +39,7 @@ UKF::UKF() {
     std_a_ = 0.8;
 
     // Process noise standard deviation yaw acceleration in rad/s^2
-    std_yawdd_ = 0.6;
+    std_yawdd_ = 0.4;
 
     // Laser measurement noise standard deviation position1 in m
     std_laspx_ = 0.15;
@@ -51,7 +51,7 @@ UKF::UKF() {
     std_radr_ = 0.3;
 
     // Radar measurement noise standard deviation angle in rad
-    std_radphi_ = 0.03;
+    std_radphi_ = 0.003;
 
     // Radar measurement noise standard deviation radius change in m/s
     std_radrd_ = 0.3;
@@ -96,7 +96,15 @@ void UKF::init(MeasurementPackage meas_package) {
     } else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
         // L(for laser) meas_px meas_py timestamp gt_px gt_py gt_vx gt_vy
 
-        x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
+        float px = meas_package.raw_measurements_[0];
+        float py = meas_package.raw_measurements_[1];
+
+        if(px==0 & py ==0)
+        {
+            px = 0.001;
+            py = 0.001;
+        }
+        x_ << px, py, 0, 0, 0;
     }
 
     is_initialized_ = true;
