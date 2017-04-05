@@ -26,7 +26,7 @@ public:
     ///* state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
     VectorXd x_;
 
-    MatrixXd R_Radar_;
+    MatrixXd R_Radar_, R_Laser_;
 
     ///* state covariance matrix
     MatrixXd P_;
@@ -115,7 +115,9 @@ public:
 
     MatrixXd GenerateSigmaPoints();
 
-    void SigmaPointPrediction(double delta_t,  MatrixXd Xsig_aug);
+    void PredictSigmaPoint(double delta_t,  MatrixXd Xsig_aug);
+
+    void init(MeasurementPackage meas_package);
 };
 
 #endif /* UKF_H */
